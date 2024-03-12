@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'screens/auth_screens/login.dart';
+import 'screens/auth_screens/loginless.dart';
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      home: AuthPage(),
+      // home: AuthPage(),
+      home: LoginScreen(),
     );
   }
 }

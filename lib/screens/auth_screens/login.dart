@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(MyApp());
+}
 
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: AuthPage(),
+    );
+  }
+}
 
 class AuthPage extends StatefulWidget {
   @override
@@ -15,181 +26,196 @@ class _AuthPageState extends State<AuthPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(_isLoginForm ? 'Login' : 'Registration'),
+        backgroundColor: Colors.teal,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Switch Between Login and Registration Tabs
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isLoginForm = true;
-                      });
-                    },
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: _isLoginForm ? FontWeight.bold : null,
-                        color: _isLoginForm ? Colors.blue : null,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal, Colors.blueAccent],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Container(
+          height: double.infinity,width: double.infinity,
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Switch Between Login and Registration Tabs
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isLoginForm = true;
+                        });
+                      },
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: _isLoginForm ? FontWeight.bold : null,
+                          color: _isLoginForm ? Colors.white : Colors.grey[300],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 20),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isLoginForm = false;
-                      });
-                    },
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: !_isLoginForm ? FontWeight.bold : null,
-                        color: !_isLoginForm ? Colors.blue : null,
+                    const SizedBox(width: 20),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isLoginForm = false;
+                        });
+                      },
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: !_isLoginForm ? FontWeight.bold : null,
+                          color: !_isLoginForm ? Colors.white : Colors.grey[300],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20),
-              // Text Input Fields
-              TextField(
-                controller: _isLoginForm ? _usernameController : _nameController,
-                decoration: InputDecoration(labelText: _isLoginForm ? 'Username or Email' : 'Name'),
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              SizedBox(height: 12),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  suffixIcon: IconButton(
-                    icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  ),
+                  ],
                 ),
-                obscureText: !_isPasswordVisible,
-              ),
-              if (!_isLoginForm) ...[
-                SizedBox(height: 12),
+                const SizedBox(height: 20),
+                // Text Input Fields
                 TextField(
-                  controller: _confirmPasswordController,
-                  decoration: InputDecoration(labelText: 'Confirm Password'),
-                  obscureText: true,
+                  controller: _isLoginForm ? _usernameController : _nameController,
+                  decoration: InputDecoration(labelText: _isLoginForm ? 'Username or Email' : 'Name'),
+                  style: const TextStyle(color: Colors.white),
                 ),
-              ],
-              // Additional optional fields for user profile setup (if needed)
-              // ...
-          
-              // Terms and Conditions Checkbox (only for Registration)
-              if (!_isLoginForm) ...[
-                SizedBox(height: 12),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _rememberMe,
-                      onChanged: (value) {
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  keyboardType: TextInputType.emailAddress,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    suffixIcon: IconButton(
+                      icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () {
                         setState(() {
-                          _rememberMe = value!;
+                          _isPasswordVisible = !_isPasswordVisible;
                         });
                       },
                     ),
-                    Text('I agree to the Terms and Conditions'),
-                  ],
-                ),
-              ],
-              SizedBox(height: 20),
-              // Login or Register Button
-              ElevatedButton(
-                onPressed: () {
-                  // Perform login or registration logic here
-                  // You can validate fields and show error messages if needed
-                },
-                child: Text(_isLoginForm ? 'Login' : 'Register'),
-              ),
-              SizedBox(height: 10),
-              // Remember Me Checkbox
-              if (_isLoginForm) ...[
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _rememberMe,
-                      onChanged: (value) {
-                        setState(() {
-                          _rememberMe = value!;
-                        });
-                      },
-                    ),
-                    Text('Remember Me'),
-                  ],
-                ),
-              ],
-              // Forgot Password Link
-              if (_isLoginForm) ...[
-                TextButton(
-                  onPressed: () {
-                    // Navigate to the password recovery/reset page
-                  },
-                  child: Text('Forgot Password?'),
-                ),
-              ],
-              // Social Media Login or Registration Buttons
-              SizedBox(height: 20),
-              Text('Or continue with:'),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Social media login or registration buttons
-                  // ...
-          
-                  // For example:
-                  IconButton(
-                    icon: Icon(Icons.facebook),
-                    onPressed: () {
-                      // Perform Facebook login or registration
-                    },
                   ),
-                  IconButton(
-                    icon: Icon(Icons.abc),
-                    onPressed: () {
-                      // Perform Twitter login or registration
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.abc),
-                    onPressed: () {
-                      // Perform Google login or registration
-                    },
+                  obscureText: !_isPasswordVisible,
+                  style: const TextStyle(color: Colors.white),
+                ),
+                if (!_isLoginForm) ...[
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: _confirmPasswordController,
+                    decoration: const InputDecoration(labelText: 'Confirm Password'),
+                    obscureText: true,
+                    style: const TextStyle(color: Colors.white),
                   ),
                 ],
-              ),
-            ],
+                // Additional optional fields for user profile setup (if needed)
+                // ...
+            
+                // Terms and Conditions Checkbox (only for Registration)
+                if (!_isLoginForm) ...[
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value!;
+                          });
+                        },
+                      ),
+                      const Text('I agree to the Terms and Conditions', style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 20),
+                // Login or Register Button
+                ElevatedButton(
+                  onPressed: () {
+                    // Perform login or registration logic here
+                    // You can validate fields and show error messages if needed
+                  },
+                  child: Text(_isLoginForm ? 'Login' : 'Register'),
+                ),
+                const SizedBox(height: 10),
+                // Remember Me Checkbox
+                if (_isLoginForm) ...[
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value!;
+                          });
+                        },
+                      ),
+                      const Text('Remember Me', style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                ],
+                // Forgot Password Link
+                if (_isLoginForm) ...[
+                  TextButton(
+                    onPressed: () {
+                      // Navigate to the password recovery/reset page
+                    },
+                    child: const Text('Forgot Password?', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+                // Social Media Login or Registration Buttons
+                const SizedBox(height: 20),
+                const Text('Or continue with:', style: TextStyle(color: Colors.white)),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Social media login or registration buttons
+                    // ...
+            
+                    // For example:
+                    IconButton(
+                      icon: const Icon(Icons.facebook),
+                      onPressed: () {
+                        // Perform Facebook login or registration
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.cabin),
+                      onPressed: () {
+                        // Perform Twitter login or registration
+                      },
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.abc_outlined),
+                      onPressed: () {
+                        // Perform Google login or registration
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

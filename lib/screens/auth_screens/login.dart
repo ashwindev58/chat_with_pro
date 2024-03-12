@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AuthPage(),
-    );
-  }
-}
 
 class AuthPage extends StatefulWidget {
+  const AuthPage({super.key});
+
   @override
-  _AuthPageState createState() => _AuthPageState();
+  AuthPageState createState() => AuthPageState();
 }
 
-class _AuthPageState extends State<AuthPage> {
+class AuthPageState extends State<AuthPage> {
   bool _isLoginForm = true;
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
@@ -150,13 +140,27 @@ class _AuthPageState extends State<AuthPage> {
                 ],
                 const SizedBox(height: 20),
                 // Login or Register Button
-                ElevatedButton(
-                  onPressed: () {
-                    // Perform login or registration logic here
-                    // You can validate fields and show error messages if needed
-                  },
-                  child: Text(_isLoginForm ? 'Login' : 'Register'),
+                 ElevatedButton(
+                onPressed: () {
+                  // Perform login or registration logic here
+                  // You can validate fields and show error messages if needed
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orangeAccent,
+                  padding: EdgeInsets.all(15.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
+                child: Text(
+                  _isLoginForm ? 'Login' : 'Register',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
                 const SizedBox(height: 10),
                 // Remember Me Checkbox
                 if (_isLoginForm) ...[

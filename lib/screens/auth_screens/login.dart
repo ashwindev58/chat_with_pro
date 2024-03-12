@@ -1,82 +1,126 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:equatable/equatable.dart';
 
-class AuthPage extends StatefulWidget {
-  const AuthPage({super.key});
+// Events
+abstract class AuthEvent extends Equatable {
+  const AuthEvent();
 
   @override
-  AuthPageState createState() => AuthPageState();
+  List<Object> get props => [];
 }
 
-class AuthPageState extends State<AuthPage> {
-  bool _isLoginForm = true;
-  bool _isPasswordVisible = false;
-  bool _rememberMe = false;
+class SwitchTabEvent extends AuthEvent {
+  final bool isLoginForm;
 
-  TextEditingController _usernameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  const SwitchTabEvent({required this.isLoginForm});
+
+  @override
+  List<Object> get props => [isLoginForm];
+}
+
+class AuthFormEvent extends AuthEvent {
+  // Define events for form interactions (login, registration, etc.)
+}
+
+// States
+abstract class AuthState extends Equatable {
+  const AuthState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class AuthPageState extends AuthState {
+  final bool isLoginForm;
+
+  const AuthPageState({required this.isLoginForm});
+
+  @override
+  List<Object> get props => [isLoginForm];
+}
+
+class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  AuthBloc() : super(AuthPageState(isLoginForm: true));
+
+  @override
+  Stream<AuthState> mapEventToState(AuthEvent event) async* {
+    if (event is SwitchTabEvent) {
+      yield AuthPageState(isLoginForm: event.isLoginForm);
+    } else if (event is AuthFormEvent) {
+      // Handle form interactions here (login, registration, etc.)
+    }
+  }
+}
+
+// UI
+class AuthPage extends StatelessWidget {
+  const AuthPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_isLoginForm ? 'Login' : 'Registration'),
-        backgroundColor: Colors.teal,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.teal, Colors.blueAccent],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Container(
-          height: double.infinity,
-          width: double.infinity,
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTabSwitcher(),
-                const SizedBox(height: 20),
-                _buildTextFields(),
-                const SizedBox(height: 20),
-                _buildTermsAndConditions(),
-                const SizedBox(height: 20),
-                _buildLoginOrRegisterButton(),
-                const SizedBox(height: 10),
-                _buildRememberMeCheckbox(),
-                _buildForgotPasswordLink(),
-                _buildSocialMediaButtons(),
-              ],
+    return BlocProvider(
+      create: (context) => AuthBloc(),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(state is AuthPageState && state.isLoginForm ? 'Login' : 'Registration'),
+              backgroundColor: Colors.teal,
             ),
-          ),
-        ),
+            body: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.teal, Colors.blueAccent],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Container(
+                height: double.infinity,
+                width: double.infinity,
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildTabSwitcher(context),
+                      const SizedBox(height: 20),
+                      _buildTextFields(state),
+                      const SizedBox(height: 20),
+                      _buildTermsAndConditions(context, state),
+                      const SizedBox(height: 20),
+                      _buildLoginOrRegisterButton(context),
+                      const SizedBox(height: 10),
+                      _buildRememberMeCheckbox(context),
+                      _buildForgotPasswordLink(context),
+                      _buildSocialMediaButtons(),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildTabSwitcher() {
+  Widget _buildTabSwitcher(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildTab('Login', _isLoginForm),
+        _buildTab(context, 'Login', true),
         const SizedBox(width: 20),
-        _buildTab('Register', !_isLoginForm),
+        _buildTab(context, 'Register', false),
       ],
     );
   }
 
-  Widget _buildTab(String text, bool isSelected) {
+  Widget _buildTab(BuildContext context, String text, bool isSelected) {
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _isLoginForm = text == 'Login';
-        });
+        BlocProvider.of<AuthBloc>(context).add(SwitchTabEvent(isLoginForm: text == 'Login'));
       },
       child: Text(
         text,
@@ -89,42 +133,46 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildTextFields() {
+  Widget _buildTextFields(AuthState state) {
     return Column(
       children: [
         TextField(
-          controller: _isLoginForm ? _usernameController : _nameController,
-          decoration: InputDecoration(labelText: _isLoginForm ? 'Username or Email' : 'Name'),
+          controller: (state is AuthPageState && state.isLoginForm)
+              ? TextEditingController()
+              : TextEditingController(),
+          decoration: InputDecoration(
+            labelText: (state is AuthPageState && state.isLoginForm)
+                ? 'Username or Email'
+                : 'Name',
+          ),
           style: const TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 12),
         TextField(
-          controller: _emailController,
+          controller: TextEditingController(),
           decoration: const InputDecoration(labelText: 'Email'),
           keyboardType: TextInputType.emailAddress,
           style: const TextStyle(color: Colors.white),
         ),
         const SizedBox(height: 12),
         TextField(
-          controller: _passwordController,
+          controller: TextEditingController(),
           decoration: InputDecoration(
             labelText: 'Password',
             suffixIcon: IconButton(
-              icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off),
+              icon: Icon(Icons.visibility),
               onPressed: () {
-                setState(() {
-                  _isPasswordVisible = !_isPasswordVisible;
-                });
+                // Handle visibility toggle
               },
             ),
           ),
-          obscureText: !_isPasswordVisible,
+          obscureText: true,
           style: const TextStyle(color: Colors.white),
         ),
-        if (!_isLoginForm) ...[
+        if (!(state is AuthPageState) || !state.isLoginForm) ...[
           const SizedBox(height: 12),
           TextField(
-            controller: _confirmPasswordController,
+            controller: TextEditingController(),
             decoration: const InputDecoration(labelText: 'Confirm Password'),
             obscureText: true,
             style: const TextStyle(color: Colors.white),
@@ -134,30 +182,30 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildTermsAndConditions() {
-    if (!_isLoginForm) {
+  Widget _buildTermsAndConditions(BuildContext context, AuthState state) {
+    if (!(state is AuthPageState) || !state.isLoginForm) {
       return Row(
         children: [
           Checkbox(
-            value: _rememberMe,
+            value: false,
             onChanged: (value) {
-              setState(() {
-                _rememberMe = value!;
-              });
+              // Handle checkbox state
             },
           ),
-          const Text('I agree to the Terms and Conditions', style: TextStyle(color: Colors.white)),
+          const Text(
+            'I agree to the Terms and Conditions',
+            style: TextStyle(color: Colors.white),
+          ),
         ],
       );
     }
     return Container();
   }
 
-  Widget _buildLoginOrRegisterButton() {
+  Widget _buildLoginOrRegisterButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        // Perform login or registration logic here
-        // You can validate fields and show error messages if needed
+        // Dispatch AuthFormEvent for login or registration
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.orangeAccent,
@@ -167,7 +215,7 @@ class AuthPageState extends State<AuthPage> {
         ),
       ),
       child: Text(
-        _isLoginForm ? 'Login' : 'Register',
+        'Login', // Change text based on the current state
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -177,16 +225,15 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  Widget _buildRememberMeCheckbox() {
-    if (_isLoginForm) {
+  Widget _buildRememberMeCheckbox(BuildContext context) {
+    if (BlocProvider.of<AuthBloc>(context).state is AuthPageState &&
+        (BlocProvider.of<AuthBloc>(context).state as AuthPageState).isLoginForm) {
       return Row(
         children: [
           Checkbox(
-            value: _rememberMe,
+            value: false,
             onChanged: (value) {
-              setState(() {
-                _rememberMe = value!;
-              });
+              // Handle checkbox state
             },
           ),
           const Text('Remember Me', style: TextStyle(color: Colors.white)),
@@ -196,8 +243,9 @@ class AuthPageState extends State<AuthPage> {
     return Container();
   }
 
-  Widget _buildForgotPasswordLink() {
-    if (_isLoginForm) {
+  Widget _buildForgotPasswordLink(BuildContext context) {
+    if (BlocProvider.of<AuthBloc>(context).state is AuthPageState &&
+        (BlocProvider.of<AuthBloc>(context).state as AuthPageState).isLoginForm) {
       return TextButton(
         onPressed: () {
           // Navigate to the password recovery/reset page

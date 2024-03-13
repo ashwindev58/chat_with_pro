@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/auth_screens/login.dart';
 import 'screens/auth_screens/loginless.dart';
+import 'screens/dashboard/dashboardscreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
 
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: AuthPage(),
-      home: LoginScreen(),
+      // home: LoginScreen(),
+      home: DashboardScreen(),
     );
   }
 }

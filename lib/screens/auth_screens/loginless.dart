@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -55,6 +56,7 @@ class LoginScreen extends StatelessWidget {
                 ValueListenableBuilder(
                     valueListenable: _isLoginForm,
                     builder: (BuildContext context, var a, var c) {
+                      print("print fffffffff ----- $a $c");
                       return _buildTermsAndConditions();
                     }),
                 // const SizedBox(height: 20),
@@ -211,11 +213,16 @@ class LoginScreen extends StatelessWidget {
           if (_isLoginForm.value) {
             return Row(
               children: [
-                Checkbox(
-                  value: _rememberMe.value,
-                  onChanged: (value) {
-                    _rememberMe.value = value!;
-                  },
+                ValueListenableBuilder(
+                  valueListenable:_rememberMe ,
+                  builder: (BuildContext context,var a,var b) {
+                    return Checkbox(
+                      value: _rememberMe.value,
+                      onChanged: (value) {
+                        _rememberMe.value = value!;
+                      },
+                    );
+                  }
                 ),
                 const Text('Remember Me',
                     style: TextStyle(color: Colors.white)),

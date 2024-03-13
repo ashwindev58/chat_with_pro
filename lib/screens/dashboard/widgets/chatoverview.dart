@@ -19,7 +19,7 @@ class ChatOverviewWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               // Replace this with actual chat data
               return ChatCard(
-                profileImage: 'images/profile_${index + 1}.jpg',
+                profileImage: 'https://raw.githubusercontent.com/ashwindev58/images/main/businside.jpg',
                 userName: 'User $index',
                 lastMessage: 'Hello, how can I help you?',
                 timestamp: '2h ago',
@@ -51,7 +51,7 @@ class ProfessionalsDirectoryWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               // Replace this with actual professional data
               return ProfessionalCard(
-                profileImage: 'images/professional_${index + 1}.jpg',
+                profileImage: 'https://raw.githubusercontent.com/ashwindev58/images/main/plastore.png',
                 professionalName: 'Professional $index',
                 expertise: 'Specialty $index',
               );
@@ -92,7 +92,7 @@ class ChatCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(50.0),
-              child: Image.asset(
+              child: Image.network(
                 profileImage,
                 width: 50.0,
                 height: 50.0,
@@ -146,14 +146,18 @@ class ProfessionalCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50.0),
-              child: Image.asset(
-                profileImage,
-                width: 50.0,
-                height: 50.0,
-                fit: BoxFit.cover,
-              ),
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: Image.network(
+                    profileImage,
+                    width: 50.0,
+                    height: 50.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 8.0),
             Text(

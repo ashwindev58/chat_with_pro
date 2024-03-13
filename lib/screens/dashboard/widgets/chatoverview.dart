@@ -131,7 +131,7 @@ class ProfessionalCard extends StatelessWidget {
     required this.professionalName,
     required this.expertise,
   });
-
+// .
   @override
   Widget build(BuildContext context) {
     return Container(

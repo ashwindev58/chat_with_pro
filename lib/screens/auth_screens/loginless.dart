@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../dashboard/dashboardscreen.dart';
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
@@ -22,11 +24,10 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: ValueListenableBuilder(
-          valueListenable: _isLoginForm,
-          builder: (BuildContext context,var a,var b) {
-            return Text(_isLoginForm.value ? 'Login' : 'Registration');
-          }
-        ),
+            valueListenable: _isLoginForm,
+            builder: (BuildContext context, var a, var b) {
+              return Text(_isLoginForm.value ? 'Login' : 'Registration');
+            }),
         backgroundColor: Colors.teal,
       ),
       body: Container(
@@ -60,10 +61,10 @@ class LoginScreen extends StatelessWidget {
                       return _buildTermsAndConditions();
                     }),
                 // const SizedBox(height: 20),
-                 _buildRememberMeCheckbox(),
-                 const SizedBox(height: 10),
+                _buildRememberMeCheckbox(),
+                const SizedBox(height: 10),
                 _buildLoginOrRegisterButton(),
-                
+
                 _buildForgotPasswordLink(),
                 _buildSocialMediaButtons(),
               ],
@@ -184,6 +185,12 @@ class LoginScreen extends StatelessWidget {
         builder: (BuildContext context, var c, var e) {
           return ElevatedButton(
             onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DashboardScreen(),
+                ),
+              );
               // Perform login or registration logic here
               // You can validate fields and show error messages if needed
             },
@@ -214,16 +221,15 @@ class LoginScreen extends StatelessWidget {
             return Row(
               children: [
                 ValueListenableBuilder(
-                  valueListenable:_rememberMe ,
-                  builder: (BuildContext context,var a,var b) {
-                    return Checkbox(
-                      value: _rememberMe.value,
-                      onChanged: (value) {
-                        _rememberMe.value = value!;
-                      },
-                    );
-                  }
-                ),
+                    valueListenable: _rememberMe,
+                    builder: (BuildContext context, var a, var b) {
+                      return Checkbox(
+                        value: _rememberMe.value,
+                        onChanged: (value) {
+                          _rememberMe.value = value!;
+                        },
+                      );
+                    }),
                 const Text('Remember Me',
                     style: TextStyle(color: Colors.white)),
               ],

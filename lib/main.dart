@@ -24,8 +24,8 @@ class MyApp extends StatelessWidget {
 
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: AuthPage(),
-      // home: LoginScreen(),
-      home: DashboardScreen(),
+      home: LoginScreen(),
+      // home: DashboardScreen(),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../chatscreen/chatpage.dart';
 import 'widgets/chatoverview.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -67,11 +68,13 @@ class DashboardScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Quick Actions Widget
-              const Row(
+               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   QuickActionIcon(
-                    icon: Icons.message,
+                    icon: Icons.message,onTap: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfessionalsListScreen()));
+                    },
                     label: 'New Chat',
                     color: Colors.blue,
                     // Add onTap callback for action

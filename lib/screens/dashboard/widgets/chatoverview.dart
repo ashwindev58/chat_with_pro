@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ChatOverviewWidget extends StatelessWidget {
+  const ChatOverviewWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -19,7 +21,8 @@ class ChatOverviewWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               // Replace this with actual chat data
               return ChatCard(
-                profileImage: 'https://raw.githubusercontent.com/ashwindev58/images/main/businside.jpg',
+                profileImage:
+                    'https://raw.githubusercontent.com/ashwindev58/images/main/businside.jpg',
                 userName: 'User $index',
                 lastMessage: 'Hello, how can I help you?',
                 timestamp: '2h ago',
@@ -33,6 +36,8 @@ class ChatOverviewWidget extends StatelessWidget {
 }
 
 class ProfessionalsDirectoryWidget extends StatelessWidget {
+  const ProfessionalsDirectoryWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -51,7 +56,8 @@ class ProfessionalsDirectoryWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               // Replace this with actual professional data
               return ProfessionalCard(
-                profileImage: 'https://raw.githubusercontent.com/ashwindev58/images/main/plastore.png',
+                profileImage:
+                    'https://raw.githubusercontent.com/ashwindev58/images/main/plastore.png',
                 professionalName: 'Professional $index',
                 expertise: 'Specialty $index',
               );
@@ -69,7 +75,7 @@ class ChatCard extends StatelessWidget {
   final String lastMessage;
   final String timestamp;
 
-  ChatCard({
+  const ChatCard({super.key, 
     required this.profileImage,
     required this.userName,
     required this.lastMessage,
@@ -83,27 +89,40 @@ class ChatCard extends StatelessWidget {
       margin: EdgeInsets.only(right: 16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
-        color: Colors.blue[100],
+        color: Colors.white.withOpacity(0.17),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(50.0),
-              child: Image.network(
-                profileImage,
-                width: 50.0,
-                height: 50.0,
-                fit: BoxFit.cover,
-              ),
+            Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: Image.network(
+                    profileImage,
+                    width: 45.0,
+                    height: 45.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(width: 8.0),
+            Column(
+              children: [
+                Text(
+                  userName,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  userName,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            SizedBox(height: 8.0),
-            Text(
-              userName,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              ],
             ),
+            SizedBox(height: 8,),
             Text(
               lastMessage,
               maxLines: 2,
@@ -126,7 +145,7 @@ class ProfessionalCard extends StatelessWidget {
   final String professionalName;
   final String expertise;
 
-  ProfessionalCard({
+  const ProfessionalCard({super.key, 
     required this.profileImage,
     required this.professionalName,
     required this.expertise,
@@ -139,7 +158,7 @@ class ProfessionalCard extends StatelessWidget {
       margin: EdgeInsets.only(right: 16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.0),
-        color: Colors.green[100],
+        color: Colors.white.withOpacity(0.2),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
@@ -147,29 +166,36 @@ class ProfessionalCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(50.0),
                   child: Image.network(
                     profileImage,
-                    width: 50.0,
-                    height: 50.0,
+                    width: 45.0,
+                    height: 45.0,
                     fit: BoxFit.cover,
                   ),
                 ),
+                            SizedBox(width: 10.0),
+
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      professionalName,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      expertise,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                )
               ],
             ),
-            SizedBox(height: 8.0),
-            Text(
-              professionalName,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              expertise,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            Spacer(),
+            // Spacer(),
             Text('View Profile'),
           ],
         ),

@@ -8,7 +8,7 @@ class ProfessionalsListScreen extends StatefulWidget {
   @override
   _ProfessionalsListScreenState createState() => _ProfessionalsListScreenState();
 }
-
+//.
 class _ProfessionalsListScreenState extends State<ProfessionalsListScreen> {
   List<Professional> professionals = [
     Professional(name: 'Dr. John Doe', expertise: 'Dentist'),

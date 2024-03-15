@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(ProfessionalsListScreen());
-}
+import '../../constants/constants.dart';
 
 class ProfessionalsListScreen extends StatefulWidget {
   @override
-  _ProfessionalsListScreenState createState() => _ProfessionalsListScreenState();
+  _ProfessionalsListScreenState createState() =>
+      _ProfessionalsListScreenState();
 }
-//.
+
 class _ProfessionalsListScreenState extends State<ProfessionalsListScreen> {
-  List<Professional> professionals = [
+  final List<Professional> professionals = [
     Professional(name: 'Dr. John Doe', expertise: 'Dentist'),
+    Professional(name: 'Dr. Jane Smith', expertise: 'Psychologist'),
+    Professional(name: 'Dr. Jane Smith', expertise: 'Psychologist'),
+    Professional(name: 'Dr. Jane Smith', expertise: 'Psychologist'),
     Professional(name: 'Dr. Jane Smith', expertise: 'Psychologist'),
     Professional(name: 'Dr. Alex Johnson', expertise: 'Pediatrician'),
     Professional(name: 'Dr. Emily Brown', expertise: 'Dermatologist'),
@@ -24,18 +26,24 @@ class _ProfessionalsListScreenState extends State<ProfessionalsListScreen> {
   @override
   void initState() {
     super.initState();
-    filteredProfessionals = professionals;
+    filteredProfessionals = List.from(professionals);
   }
 
   void filterProfessionals(String query) {
+    if (query.isEmpty) {
+      setState(() {
+        filteredProfessionals = List.from(professionals);
+        searchText = query;
+      });
+      return;
+    }
+
+    final lowerCaseQuery = query.toLowerCase();
     setState(() {
       searchText = query;
       filteredProfessionals = professionals.where((professional) {
-        final nameLower = professional.name.toLowerCase();
-        final expertiseLower = professional.expertise.toLowerCase();
-        final searchLower = query.toLowerCase();
-
-        return nameLower.contains(searchLower) || expertiseLower.contains(searchLower);
+        return professional.name.toLowerCase().contains(lowerCaseQuery) ||
+            professional.expertise.toLowerCase().contains(lowerCaseQuery);
       }).toList();
     });
   }
@@ -47,7 +55,8 @@ class _ProfessionalsListScreenState extends State<ProfessionalsListScreen> {
           filteredProfessionals.sort((a, b) => a.name.compareTo(b.name));
           break;
         case 'expertise':
-          filteredProfessionals.sort((a, b) => a.expertise.compareTo(b.expertise));
+          filteredProfessionals
+              .sort((a, b) => a.expertise.compareTo(b.expertise));
           break;
         default:
           break;
@@ -57,19 +66,21 @@ class _ProfessionalsListScreenState extends State<ProfessionalsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.blue,
-      ),
-      home: Scaffold(
+    return Container(
+      decoration: backGroundStyle,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text('Find a Professional'),
+          backgroundColor: Colors.transparent,
+          title: Text('Find a Professional',style: TextStyle(fontWeight: FontWeight.bold),),
           centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                showSearch(context: context, delegate: ProfessionalSearchDelegate(filterProfessionals));
+                showSearch(
+                    context: context,
+                    delegate: ProfessionalSearchDelegate(filterProfessionals));
               },
             ),
             PopupMenuButton(
@@ -96,7 +107,8 @@ class _ProfessionalsListScreenState extends State<ProfessionalsListScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatScreen(professional: filteredProfessionals[index]),
+                    builder: (context) =>
+                        ChatScreen(professional: filteredProfessionals[index]),
                   ),
                 );
               },
@@ -122,7 +134,7 @@ class ProfessionalListItem extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         padding: EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.white.withOpacity(0.1).withAlpha(40),
           borderRadius: BorderRadius.circular(16.0),
           boxShadow: [
             BoxShadow(
@@ -138,7 +150,7 @@ class ProfessionalListItem extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 36.0,
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.blue.withOpacity(0.9),
               child: Text(
                 professional.name[0],
                 style: TextStyle(
@@ -155,7 +167,7 @@ class ProfessionalListItem extends StatelessWidget {
                 Text(
                   professional.name,
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: 18.0,color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -164,7 +176,7 @@ class ProfessionalListItem extends StatelessWidget {
                   professional.expertise,
                   style: TextStyle(
                     fontSize: 14.0,
-                    color: Colors.grey,
+                    color: Colors.white.withOpacity(0.9),
                   ),
                 ),
               ],
@@ -237,6 +249,23 @@ class ProfessionalSearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Container();
+    final suggestionList = query.isEmpty
+        ? []
+        : ['Dentist', 'Psychologist', 'Pediatrician', 'Dermatologist']
+            .where((text) => text.toLowerCase().startsWith(query.toLowerCase()))
+            .toList();
+
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(suggestionList[index]),
+          onTap: () {
+            query = suggestionList[index];
+            showResults(context);
+          },
+        );
+      },
+    );
   }
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../constants/constants.dart';
 import '../dashboard/dashboardscreen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -31,13 +32,7 @@ class LoginScreen extends StatelessWidget {
         backgroundColor: Colors.teal,
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.teal, Colors.blueAccent],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: backGroundStyle,
         child: Container(
           height: double.infinity,
           width: double.infinity,

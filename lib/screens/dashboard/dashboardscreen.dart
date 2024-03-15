@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/constants.dart';
 import '../chatscreen/chatpage.dart';
 import 'widgets/chatoverview.dart';
 
@@ -7,13 +8,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Colors.teal, Colors.blueAccent],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
+      decoration: backGroundStyle,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
